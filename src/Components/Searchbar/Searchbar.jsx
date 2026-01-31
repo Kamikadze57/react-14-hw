@@ -1,42 +1,30 @@
-import { Component } from "react";
 import { ReactComponent as SearchIcon } from "../../search.svg";
+import { useState, memo } from "react";
 
-class Searchbar extends Component {
-  state = {
-    searchQuery: "",
-  };
-  handleChange = (e) => {
-    this.setState({ searchQuery: e.currentTarget.value.toLowerCase() });
-  };
-  handleSubmit = (e) => {
+const Searchbar = memo(({ onSubmit }) => {
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (this.state.searchQuery.trim() === "") {
-      alert("Введіть слово для пошуку картинок.");
-      return;
-    }
-    this.props.onSubmit(this.state.searchQuery);
+    if (query.trim() === "") return alert("Введіть запит");
+    onSubmit(query);
   };
-  render() {
-    return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button">
-            <SearchIcon width="24" height="24" />
-          </button>
-
-          <input
-            className="SearchForm-input"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.searchQuery}
-            onChange={this.handleChange}
-          />
-        </form>
-      </header>
-    );
-  }
-}
+  return (
+    <header className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button">
+          <SearchIcon width="24" height="24" />
+        </button>
+        <input
+          className="SearchForm-input"
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value.toLowerCase())}
+          placeholder="Search images and photos"
+        />
+      </form>
+    </header>
+  );
+});
 
 export default Searchbar;
